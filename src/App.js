@@ -2,18 +2,8 @@
 import React, { useState } from 'react';
 
 function App() {
-  const [response, setResponse] = useState(null);
   const [message, setMessage] = useState('');
-
-  const fetchBackendData = async () => {
-    try {
-      const res = await fetch('https://atmashuddhi-backend.onrender.com');
-      const data = await res.text();
-      setResponse(data);
-    } catch (error) {
-      console.error('Error fetching backend data:', error);
-    }
-  };
+  const [responses, setResponses] = useState([]);
 
   const sendMessage = async () => {
     if (message.trim() === '') return;
@@ -26,7 +16,7 @@ function App() {
         body: JSON.stringify({ message }),
       });
       const data = await res.json();
-      setResponse(data);
+      setResponses((prevResponses) => [...prevResponses, { question: message, answer: data[0]?.answer || 'No answer available' }]);
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
@@ -36,8 +26,6 @@ function App() {
   return (
     <div className="App">
       <h1>Welcome to Atmashuddhi Creation</h1>
-      <button onClick={fetchBackendData}>Fetch Backend Data</button>
-      {response && <p>Response from backend: {JSON.stringify(response)}</p>}
       <div>
         <input
           type="text"
@@ -47,9 +35,16 @@ function App() {
         />
         <button onClick={sendMessage}>Send</button>
       </div>
+      <div>
+        {responses.map((response, index) => (
+          <div key={index}>
+            <strong>Q:</strong> {response.question} <br />
+            <strong>A:</strong> {response.answer}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
 export default App;
-
