@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 function App() {
   const [message, setMessage] = useState('');
   const [responses, setResponses] = useState([]);
+  const [token, setToken] = useState(null);
 
   const sendMessage = async () => {
     if (message.trim() === '') return;
@@ -16,10 +17,27 @@ function App() {
         body: JSON.stringify({ message }),
       });
       const data = await res.json();
-      setResponses((prevResponses) => [...prevResponses, { question: message, answer: data[0]?.answer || 'No answer available' }]);
+      setResponses(data);
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
+    }
+  };
+
+  const createTicket = async () => {
+    try {
+      const res = await fetch('https://atmashuddhi-backend.onrender.com/api/chatbot/ticket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question: message }),
+      });
+      const data = await res.json();
+      setToken(data.token);
+      setMessage('');
+    } catch (error) {
+      console.error('Error creating ticket:', error);
     }
   };
 
@@ -33,15 +51,27 @@ function App() {
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your question..."
         />
-        <button onClick={sendMessage}>Send</button>
+        <button onClick={sendMessage}>Search</button>
+        <button onClick={createTicket}>Ask Different Question</button>
       </div>
       <div>
-        {responses.map((response, index) => (
-          <div key={index}>
-            <strong>Q:</strong> {response.question} <br />
-            <strong>A:</strong> {response.answer}
+        {responses.length > 0 && (
+          <div>
+            <h2>Responses:</h2>
+            {responses.map((response, index) => (
+              <div key={index}>
+                <strong>Q:</strong> {response.question} <br />
+                <strong>A:</strong> {response.answer}
+              </div>
+            ))}
           </div>
-        ))}
+        )}
+        {token && (
+          <div>
+            <h2>New Question Token:</h2>
+            <p>Token: {token}</p>
+          </div>
+        )}
       </div>
     </div>
   );
