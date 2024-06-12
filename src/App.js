@@ -1,80 +1,51 @@
-// src/App.js
-import React, { useState } from 'react';
+// src/app.js
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
-function App() {
-  const [message, setMessage] = useState('');
-  const [responses, setResponses] = useState([]);
-  const [token, setToken] = useState(null);
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-  const sendMessage = async () => {
-    if (message.trim() === '') return;
-    try {
-      const res = await fetch('https://atmashuddhi-backend.onrender.com/api/chatbot', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message }),
-      });
-      const data = await res.json();
-      setResponses(data);
-      setMessage('');
-    } catch (error) {
-      console.error('Error sending message:', error);
-    }
-  };
+mongoose.connect('mongodb+srv://kalpjain1143:<password>@cluster0.od1glv7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.error('Failed to connect to MongoDB', err);
+});
 
-  const createTicket = async () => {
-    try {
-      const res = await fetch('https://atmashuddhi-backend.onrender.com/api/chatbot/ticket', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ question: message }),
-      });
-      const data = await res.json();
-      setToken(data.token);
-      setMessage('');
-    } catch (error) {
-      console.error('Error creating ticket:', error);
-    }
-  };
+app.use(cors());
+app.use(express.json());
 
-  return (
-    <div className="App">
-      <h1>Welcome to Atmashuddhi Creation</h1>
-      <div>
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your question..."
-        />
-        <button onClick={sendMessage}>Search</button>
-        <button onClick={createTicket}>Ask Different Question</button>
-      </div>
-      <div>
-        {responses.length > 0 && (
-          <div>
-            <h2>Responses:</h2>
-            {responses.map((response, index) => (
-              <div key={index}>
-                <strong>Q:</strong> {response.question} <br />
-                <strong>A:</strong> {response.answer}
-              </div>
-            ))}
-          </div>
-        )}
-        {token && (
-          <div>
-            <h2>New Question Token:</h2>
-            <p>Token: {token}</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+// Load questions
+const questionsPath = path.join(__dirname, 'data/questions.json');
+const questions = JSON.parse(fs.readFileSync(questionsPath, 'utf8'));
 
-export default App;
+app.get('/', (req, res) => {
+    res.send('Hello from Atmashuddhi Backend');
+});
+
+// Endpoint to handle chatbot queries with keyword search
+app.post('/api/chatbot', (req, res) => {
+    const { message } = req.body;
+    const lowercasedMessage = message.toLowerCase();
+    const results = questions.filter(q =>
+        q.question.toLowerCase().includes(lowercasedMessage)
+    );
+    res.json(results);
+});
+
+// Endpoint to create a new token with simple format
+app.post('/api/chatbot/ticket', (req, res) => {
+    const { question } = req.body;
+    const token = Math.random().toString(36).substring(2, 8); // Simple 6-character token
+    // Normally save the token and question to a database
+    res.json({ token, question });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
