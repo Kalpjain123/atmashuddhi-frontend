@@ -10,7 +10,7 @@ function App() {
   const sendMessage = async () => {
     if (message.trim() === '') return;
     try {
-      const res = await fetch('https://atmashuddhi-backend.onrender.com/api/chatbot', {
+      const res = await fetch('/api/chatbot', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -19,7 +19,6 @@ function App() {
       });
       const data = await res.json();
       setResponses(data);
-      setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
     }
@@ -28,7 +27,7 @@ function App() {
   const createTicket = async () => {
     if (message.trim() === '') return;
     try {
-      const res = await fetch('https://atmashuddhi-backend.onrender.com/api/chatbot/ticket', {
+      const res = await fetch('/api/chatbot/ticket', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,4 +79,3 @@ function App() {
 }
 
 export default App;
-              
