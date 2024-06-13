@@ -1,50 +1,64 @@
 /* src/App.css */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
-  text-align: center;
-  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #fff;
 }
 
 .App {
-  max-width: 600px;
-  margin: auto;
-  background: white;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
 }
 
-.App:hover {
-  transform: scale(1.02);
+.App h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  animation: slideDown 1s ease-in-out;
 }
 
 .chat-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 input[type="text"] {
-  width: calc(100% - 40px);
+  width: 80%;
   padding: 10px;
   margin: 10px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  animation: inputFadeIn 1s ease-in-out;
 }
 
 button {
   padding: 10px 20px;
   margin: 10px;
-  background-color: #4CAF50;
-  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  font-size: 1rem;
+  background-color: #4caf50;
+  color: white;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  animation: buttonFadeIn 1s ease-in-out;
 }
 
 button:hover {
@@ -54,32 +68,71 @@ button:hover {
 .responses-container {
   text-align: left;
   margin-top: 20px;
+  animation: slideUp 1s ease-in-out;
 }
 
 .response-item {
-  background: #f9f9f9;
+  background: rgba(255, 255, 255, 0.1);
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 8px;
   margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.5s ease-in-out;
 }
 
 .token-container {
-  background: #dff0d8;
+  background: rgba(0, 255, 0, 0.1);
   padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes inputFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes buttonFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
+                   }
