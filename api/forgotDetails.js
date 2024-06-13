@@ -7,7 +7,7 @@ export default async (req, res) => {
     const { mobileNumber, dateOfBirth } = req.body;
 
     try {
-      const usersPath = path.join(process.cwd(), 'api', 'users.json');
+      const usersPath = path.join(process.cwd(), 'data', 'users.json');
       const usersData = await fs.readFile(usersPath, 'utf8');
       const users = JSON.parse(usersData);
 
