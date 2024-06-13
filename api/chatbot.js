@@ -8,12 +8,12 @@ export default async (req, res) => {
     const { message, feedback, user } = req.body;
 
     try {
-      const questionsPath = path.join(process.cwd(), 'api', 'questions.json');
+      const questionsPath = path.join(process.cwd(), 'data', 'questions.json');
       const questionsData = await fs.readFile(questionsPath, 'utf8');
       const questions = JSON.parse(questionsData);
 
       if (feedback) {
-        const ticketsPath = path.join(process.cwd(), 'api', 'tickets.json');
+        const ticketsPath = path.join(process.cwd(), 'data', 'tickets.json');
         const ticketsData = await fs.readFile(ticketsPath, 'utf8');
         const tickets = JSON.parse(ticketsData);
 
